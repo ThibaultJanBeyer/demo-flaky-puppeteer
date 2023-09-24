@@ -2,8 +2,6 @@ const baseUrl = `file://${process.cwd()}`;
 const wait = (time) => new Promise((res) => setTimeout(() => res("ok"), time));
 jest.setTimeout(60000);
 
-const steps = 10;
-
 const moveSelectTo = async (page, x, y, dX, dY, steps = 10) => {
   await page.mouse.move(x, y);
   await wait(100);
@@ -22,11 +20,7 @@ describe("Document Scroll", () => {
       docHeight: window.innerHeight,
     }));
 
-    const { mouse } = page;
-    await mouse.move(50, docHeight - 100);
-    await mouse.down();
-    await mouse.move(50, docHeight + 150, { steps: 150 });
-    await mouse.up();
+    await moveSelectTo(page, 50, docHeight - 100, 50, docHeight + 150, 150);
 
     const { selected } = await page.evaluate(() => ({
       selected: window.selected,
@@ -44,7 +38,7 @@ describe("Document Scroll", () => {
       "item-289",
       "item-305",
       "item-321",
-      "item-145",
+      "item-337",
     ];
 
     expect(selected.sort()).toEqual(expected.sort());
