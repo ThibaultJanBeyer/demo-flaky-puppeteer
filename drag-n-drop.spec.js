@@ -3,6 +3,7 @@ const wait = (time) => new Promise((res) => setTimeout(() => res("ok"), time));
 jest.setTimeout(60000);
 
 const steps = 10;
+const itemId = "2";
 
 const moveSelect = async (page, x, y, distance = 200) => {
   const mouse = page.mouse;
@@ -17,10 +18,48 @@ const moveSelect = async (page, x, y, distance = 200) => {
 };
 
 describe("Drag N Drop", () => {
+  it("The items should be immediately draggable", async () => {
+    await page.goto(`${baseUrl}/drag-n-drop.html`);
+    const { itemVect } = await page.evaluate(
+      (itemId) => ({
+        itemVect: window.getItemVect(itemId),
+      }),
+      itemId
+    );
+
+    const mouse = page.mouse;
+    await mouse.move(itemVect.x, itemVect.y);
+    await mouse.down();
+    await mouse.move(itemVect.x + 100, itemVect.y + 100, { steps });
+    await mouse.up();
+
+    const { dragged, itemVect2, dragStart, dragMove } = await page.evaluate(
+      (itemId) => ({
+        itemVect2: window.getItemVect(itemId),
+        dragged: window.dragged,
+        dragStart: window.dragStart,
+        dragMove: window.dragMove,
+      }),
+      itemId
+    );
+
+    expect(dragged).toEqual([`item-${itemId}`]);
+    expect(dragStart).toEqual([[`item-${itemId}`]]);
+    expect(dragMove.length).toEqual(10);
+    expect(itemVect).not.toMatchObject(itemVect2);
+    expect(itemVect2.x - itemVect.x + itemVect2.y - itemVect.y).toBeGreaterThan(
+      50
+    );
+  });
+
   it("The items should be draggable after selection", async () => {
     await page.goto(`${baseUrl}/drag-n-drop.html`);
 
-    await moveSelect(page, 1, 1, 500);
+    const mouse = page.mouse;
+    await mouse.move(1, 1);
+    await mouse.down();
+    await mouse.move(500, 500, { steps });
+    await mouse.up();
 
     const {
       selected0,
@@ -44,7 +83,10 @@ describe("Drag N Drop", () => {
     expect(dragged0.length).toEqual(0);
     expect(selectMove.length).toEqual(steps);
 
-    await moveSelect(page, itemVect3.x, itemVect3.y, 100);
+    await mouse.move(itemVect3.x, itemVect3.y);
+    await mouse.down();
+    await mouse.move(itemVect3.x + 100, itemVect3.y + 100, { steps });
+    await mouse.up();
 
     const {
       selected02,
