@@ -1,4 +1,4 @@
-const baseUrl = `file://${process.cwd()}/`;
+const baseUrl = `file://${process.cwd()}`;
 const wait = (time) => new Promise((res) => setTimeout(() => res("ok"), time));
 jest.setTimeout(60000);
 
@@ -14,9 +14,9 @@ const moveSelect = async (page, x, y, distance = 200) => {
   await wait(100);
 };
 
-describe("Drag Issue", () => {
-  it("The drag should go to the same length", async () => {
-    await page.goto(`${baseUrl}/drag-issue.html`);
+describe("Drag Issue With Text", () => {
+  it("When dragging twice over text, puppeteer breaks", async () => {
+    await page.goto(`${baseUrl}/drag-issue-text.html`);
     await moveSelect(page, 3, 3, 500);
     await moveSelect(page, 3, 3, 500);
     const { callbacks } = await page.evaluate(() => ({ callbacks }));
