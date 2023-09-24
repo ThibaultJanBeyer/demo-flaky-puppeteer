@@ -8,13 +8,12 @@ const itemId = "2";
 const moveSelect = async (page, x, y, distance = 200) => {
   const mouse = page.mouse;
   await mouse.move(x, y);
-  await wait(100);
+
   await mouse.down();
-  await wait(100);
+
   await mouse.move(x + distance, y + distance, { steps });
-  await wait(100);
+
   await mouse.up();
-  await wait(100);
 };
 
 describe("Drag N Drop", () => {
