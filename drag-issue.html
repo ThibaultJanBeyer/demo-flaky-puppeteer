@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="basics.css" />
+<style>
+  #area {
+    background: grey;
+    height: 100px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100px;
+  }
+  #pointer {
+    background: red;
+    height: 10px;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 10px;
+    pointer-events: none;
+  }
+</style>
+<p>Draggable</p>
+<div id="area"></div>
+<div id="pointer"></div>
+<script>
+  window.callbacks = [];
+  document.addEventListener("mouseup", (e) => {
+    window.callbacks.push({ x: e.clientX, y: e.clientY });
+    console.log("mouseup!!", window.selected, window.dragged);
+  });
+
+  const pointer = document.querySelector("#pointer");
+  document.addEventListener("mousemove", (e) => {
+    pointer.style.left = `${e.clientX}px`;
+    pointer.style.top = `${e.clientY}px`;
+  });
+</script>
