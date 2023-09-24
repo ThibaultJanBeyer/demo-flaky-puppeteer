@@ -2,7 +2,8 @@
   "name": "demo-flaky-puppeteer",
   "scripts": {
     "pretest": "yarn",
-    "test": "jest --detectOpenHandles"
+    "test": "jest",
+    "test:debug": "DEBUG=true jest"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
